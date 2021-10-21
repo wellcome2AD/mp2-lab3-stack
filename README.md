@@ -1,1 +1,2 @@
-# mp3-lab3-stack
+# mp2-lab3-stack
+Лабораторная работа №3
