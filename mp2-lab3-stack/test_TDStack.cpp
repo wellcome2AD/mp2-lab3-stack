@@ -8,8 +8,6 @@
 void main()
 {
 	TDStack<int> mas(10);
-	
-	setlocale(LC_ALL, "");
 
 	try
 	{
@@ -18,7 +16,7 @@ void main()
 	}
 	catch (...)
 	{
-		cout << '\n' << "Стек полон" << '\n';
+		cout << '\n' << "Stack is full" << '\n';
 		return;
 	}
 
@@ -29,46 +27,46 @@ void main()
 	}
 	catch (...)
 	{
-		cout << '\n' << "Стек полон" << '\n';
+		cout << '\n' << "Stack is full" << '\n';
 		return;
 	}
 	
 
 	if (mas.IsFull())
-		cout << '\n' << "Массив полный" << '\n';
+		cout << '\n' << "Array is full" << '\n';
 	else
-		cout << '\n' << "Массив не полный" << '\n';
+		cout << '\n' << "Array is not full" << '\n';
 
 
 	try
 	{
-		cout << '\n' << "Стек №1" << '\n';
+		cout << '\n' << "Stack №1" << '\n';
 		for (int i = 0; i < 5; i++)
 			cout << mas.St1_Pop() << ' ';
 		cout << '\n';
 	}
 	catch (...)
 	{
-		cout << '\n' << "Стек №1 пуст" << '\n';
+		cout << '\n' << "Stack №1 is empty" << '\n';
 		return;
 	}
 
 	try
 	{
-		cout << '\n' << "Стек №2" << '\n';
+		cout << '\n' << "Stack №2" << '\n';
 		for (int i = 0; i < 5; i++)
 			cout << mas.St2_Pop() << ' ';
 		cout << '\n';
 	}
 	catch (...)
 	{
-		cout << '\n' << "Стек №2 пуст" << '\n';
+		cout << '\n' << "Stack №2 is empty" << '\n';
 		return;
 	}
 
 	if (mas.St1_IsEmpty())
-		cout << '\n' << "Стек №1 пуст" << '\n';
+		cout << '\n' << "Stack №1 is empty" << '\n';
 
 	if (mas.St2_IsEmpty())
-		cout << '\n' << "Стек №2 пуст" << '\n';
+		cout << '\n' << "Stack №2 is empty" << '\n';
 }
