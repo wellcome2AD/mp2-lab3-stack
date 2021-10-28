@@ -7,7 +7,105 @@ using namespace std;
 
 bool TCalculator::CheckExpression()
 {
-	return true;
+
+	int size = expr.size();
+	TStack<char> st1(size);
+
+	for (int i = 0; i < size; i++)
+	{
+		if (expr[i] == '(')
+			st1.Push('(');
+		try
+		{
+			if (expr[i] == ')')
+				st1.Pop();
+		}
+		catch (...)
+		{
+			cout << " ')' more than '(' " << '\n';
+			return 0;
+		}
+	}
+
+	if (!st1.IsEmpty())
+	{
+		cout << " '(' more than ')' " << '\n';
+		return 0;
+	}
+	cout << "The expression is correct" << '\n';
+	return 1;
+}
+
+bool TCalculator::isOperator(char symbol)
+{
+	char operators[] = { '+', '-', '*', '/', '^' };
+	int size = 5;
+
+	for (int i = 0; i < size; i++)
+		if (symbol == operators[i])
+			return true;
+
+	return false;	
+}
+
+int TCalculator::Priority(char op)
+{
+	switch (op)
+	{
+	case '(':
+		return 0;
+	case '+':
+		return 1;
+	case '-':
+		return 1;
+	case '*':
+		return 2;
+	case '/':
+		return 2;
+	case '^':
+		return 3;
+	}
+}
+
+void TCalculator::ToPostfix()
+{
+	string infix = "(" + expr + ")";
+	postfix = "";
+
+	st_char.Clear();
+
+	for (int i = 0; i < infix.size(); i++)
+	{
+		if (infix[i] <= '9' && infix[i] >= '0')
+		{
+			postfix += infix[i] + ' ';
+			continue;
+		}
+
+		if (infix[i] == '(')
+		{
+			st_char.Push('(');
+			continue;
+		}
+			
+
+		if (infix[i] == ')')
+		{
+			while (st_char.Top() != '(')
+				postfix += st_char.Pop() + ' ';
+
+			st_char.Pop();
+			continue;
+		}
+
+		if (isOperator(infix[i]))
+		{
+			while (Priority(st_char.Top()) < Priority(infix[i]))
+				postfix += st_char.Pop() + ' ';
+
+			st_char.Push(infix[i]);
+		}
+	}
 }
 
 double TCalculator::Calc()
@@ -44,3 +142,18 @@ double TCalculator::Calc()
 	
 	return st_double.Pop();
 }
+
+
+//приоритет: ( = 0, + = - = 1, *, ^
+	//1. брать очередную операцию (а), сравнивать её по приоритету
+	//с той, которая сейчас на вершине стека (b):
+	//	1.1 если (a <= b) - вытолкнуть b в строку
+	//	1.2 если a>b - записать a в стек
+	//	1.3 '(' просто записывается в стек, без проверки
+	//	1.4 ) выталкивает все операции из стека до (
+	//  (в связи с этим все выражения будут заключаться в () )
+	//2. число просто переписывается в строку
+	//+ ( + * ( - ) ) * ^ -
+	//2 + (1+2*(4 - 2))*4^2 - 5
+	//2 1 2 4 2 - * + 4 2 ^ +
+	//

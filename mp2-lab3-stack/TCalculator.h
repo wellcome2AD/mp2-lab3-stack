@@ -9,13 +9,24 @@ using namespace std;
 class TCalculator
 {
 	string expr;
-	string postfix = "1 2 5 + 4 3 - * /";
-	//TStack<char> st_char;
+	string postfix;
+	TStack<char> st_char;
 	TStack<double> st_double;
 
 public:
-	TCalculator(string _expr = "1/((2+5)*(4-3))") : expr(_expr){}
-	TCalculator(const TCalculator& cal) : expr(cal.expr), postfix(cal.postfix) {}
+	TCalculator(string _expr = "") : expr(_expr) {}
+
+	void SetExpr(string _expr) { expr = _expr; }
+	
+	string GetPostfix() { return postfix; }
+
 	bool CheckExpression(); //проверка корректности
+
+	int Priority(char op); //приоритет операций
+
+	void ToPostfix();
+
+	bool isOperator(char symbol);
+	
 	double Calc();
 };

@@ -61,14 +61,21 @@ public:
 	void Push(const T& element)
 	{
 		if (IsFull())
-			throw "Низзя положить";
+			throw "Stack is full";
 		Stack[++NumLast] = element;
 	}
 
 	T Pop()
 	{
 		if (IsEmpty())
-			throw "Низзя достать";
+			throw "Stack is empty";
 		return Stack[NumLast--];
+	}
+
+	T Top()
+	{
+		if (IsEmpty())
+			throw "Stack is empty";
+		return Stack[NumLast];
 	}
 };
