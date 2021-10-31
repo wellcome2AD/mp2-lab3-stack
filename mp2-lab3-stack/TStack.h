@@ -16,13 +16,6 @@ public:
 
 	~TStack() { delete[] Stack; }
 
-	TStack(const TStack<T>& s) : Size(s.Size), NumLast(s.NumLast)
-	{
-		Stack = new T[Size];
-		for (int i = 0; i < NumLast; i++)
-			Stack[i] = s.Stack[i];
-	}
-
 	TStack& operator=(const TStack<T>& s)
 	{
 		if (Size != s.Size) {
@@ -35,21 +28,6 @@ public:
 
 		for (int i = 0; i <= NumLast; i++)
 			Stack[i] = s.Stack[i];
-	}
-
-	bool operator==(const TStack<T>& s)
-	{
-		if (Size != s.Size || NumLast != s.NumLast)
-			return false;
-		for (int i = 0; i < NumLast; i++)
-			if (Stack[i] != s.Stack[i])
-				return false;
-		return true;
-	}
-
-	bool operator!=(const TStack<T>& s)
-	{
-		return !(this == s);
 	}
 
 	bool IsEmpty() const { return (NumLast == -1); }

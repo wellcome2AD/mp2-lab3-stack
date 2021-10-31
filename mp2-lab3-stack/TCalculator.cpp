@@ -22,14 +22,14 @@ bool TCalculator::CheckExpression()
 		}
 		catch (...)
 		{
-			cout << " ')' more than '(' " << '\n';
+			cout << "')' more than '(' " << '\n';
 			return 0;
 		}
 	}
 
 	if (!st1.IsEmpty())
 	{
-		cout << " '(' more than ')' " << '\n';
+		cout << "'(' more than ')' " << '\n';
 		return 0;
 	}
 	cout << "The expression is correct" << '\n';
@@ -69,16 +69,20 @@ int TCalculator::Priority(char op)
 
 void TCalculator::ToPostfix()
 {
-	string infix = "(" + expr + ")";
+	string infix = '(' + expr + ')';
 	postfix = "";
 
 	st_char.Clear();
 
 	for (int i = 0; i < infix.size(); i++)
 	{
+		if (infix[i] == ' ')
+			continue;
+
 		if (infix[i] <= '9' && infix[i] >= '0')
 		{
-			postfix += infix[i] + ' ';
+			postfix += infix[i];
+			postfix += ' ';
 			continue;
 		}
 
@@ -86,24 +90,57 @@ void TCalculator::ToPostfix()
 		{
 			st_char.Push('(');
 			continue;
-		}
-			
+		}			
 
 		if (infix[i] == ')')
 		{
 			while (st_char.Top() != '(')
-				postfix += st_char.Pop() + ' ';
+			{
+				try
+				{
+					postfix += st_char.Pop();
+					postfix += " ";
+				}
+				catch (string ex)
+				{
+					cout << ex;
+				}
+			}
 
-			st_char.Pop();
+			try
+			{
+				st_char.Pop();
+			}
+			catch (string ex)
+			{
+				cout << ex;
+			}
 			continue;
 		}
 
 		if (isOperator(infix[i]))
 		{
-			while (Priority(st_char.Top()) < Priority(infix[i]))
-				postfix += st_char.Pop() + ' ';
+			while (Priority(st_char.Top()) > Priority(infix[i]))
+			{
+				try
+				{
+					postfix += st_char.Pop();
+					postfix += " ";
+				}
+				catch (string ex)
+				{
+					cout << ex;
+				}
+			}
 
-			st_char.Push(infix[i]);
+			try
+			{
+				st_char.Push(infix[i]);
+			}
+			catch (string ex)
+			{
+				cout << ex;
+			}
 		}
 	}
 }
@@ -111,31 +148,34 @@ void TCalculator::ToPostfix()
 double TCalculator::Calc()
 {
 	double a, b;
-
+	
 	for (int i = 0; i < postfix.size(); i++)
 	{
 		if (postfix[i] <= '9' && postfix[i] >= '0')
+		{
 			st_double.Push(stod(&postfix[i]));
-		else
-			if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/')
-			{
-				b = st_double.Pop();
-				a = st_double.Pop();
+			continue;
+		}
 
-				switch (postfix[i])
-				{
-				case '+':
-					st_double.Push(a + b);
-					break;
-				case '-':
-					st_double.Push(a - b);
-					break;
-				case '*':
-					st_double.Push(a * b);
-					break;
-				case '/':
-					st_double.Push(a / b);
-					break;
+		if (postfix[i] != ' ')
+		{
+			b = st_double.Pop();
+			a = st_double.Pop();
+
+			switch (postfix[i])
+			{
+			case '+':
+				st_double.Push(a + b);
+				break;
+			case '-':
+				st_double.Push(a - b);
+				break;
+			case '*':
+				st_double.Push(a * b);
+				break;
+			case '/':
+				st_double.Push(a / b);
+				break;
 				}
 			}
 	}
