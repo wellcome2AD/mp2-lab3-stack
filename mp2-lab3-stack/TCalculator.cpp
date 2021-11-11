@@ -145,7 +145,7 @@ void TCalculator::ToPostfix()
 	}
 }
 
-double TCalculator::Calc()
+double TCalculator::CalcPostfix()
 {
 	double a, b;
 	
@@ -183,6 +183,89 @@ double TCalculator::Calc()
 	return st_double.Pop();
 }
 
+double TCalculator::Calc()
+{
+	string infix = "(" + expr + ")";
+
+	st_double.Clear();
+	st_char.Clear();
+
+	for (int i = 0; i < infix.length(); i++)
+	{
+		if (infix[i] += '0' && infix[i] <= '9')
+		{
+			size_t ind;
+			double num = stod(&infix[i], &ind);
+			st_double.Push(num);
+			i += ind - 1;
+		}
+
+		if (infix[i] == '(')
+		{
+			st_char.Push('(');
+			continue;
+		}
+
+		if (infix[i] == ')')
+		{
+			while (st_char.Top() != '(')
+			{
+				double b = st_double.Pop();
+				double a = st_double.Pop();
+
+				switch (postfix[i])
+				{
+				case '+':
+					st_double.Push(a + b);
+					break;
+				case '-':
+					st_double.Push(a - b);
+					break;
+				case '*':
+					st_double.Push(a * b);
+					break;
+				case '/':
+					st_double.Push(a / b);
+					break;
+				}
+			}
+
+			st_char.Pop();
+		}
+
+		if (isOperator(infix[i]))
+		{
+			while (Priority(st_char.Top()) > Priority(infix[i]))
+			{
+				double b = st_double.Pop();
+				double a = st_double.Pop();
+
+				switch (postfix[i])
+				{
+				case '+':
+					st_double.Push(a + b);
+					break;
+				case '-':
+					st_double.Push(a - b);
+					break;
+				case '*':
+					st_double.Push(a * b);
+					break;
+				case '/':
+					st_double.Push(a / b);
+					break;
+				}
+			}
+			
+			st_char.Push(infix[i]);
+		}
+	}
+
+	double top = st_double.Top();
+	if (st_double.IsEmpty())
+		return top;
+	//else throw ...
+}
 
 //приоритет: ( = 0, + = - = 1, *, ^
 	//1. брать очередную операцию (а), сравнивать её по приоритету

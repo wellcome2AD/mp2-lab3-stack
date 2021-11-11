@@ -21,12 +21,16 @@ public:
 	string GetPostfix() { return postfix; }
 
 	bool CheckExpression(); //проверка корректности
-
-	int Priority(char op); //приоритет операций
-
-	void ToPostfix();
-
-	bool isOperator(char symbol);
 	
+	void ToPostfix();
+	
+	double CalcPostfix();
+
 	double Calc();
+
+private:
+	
+	bool isOperator(char symbol);
+
+	int Priority(char op); //приоритет операций	
 };
