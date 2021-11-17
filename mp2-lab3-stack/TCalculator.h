@@ -34,9 +34,10 @@ private:
 
 	bool isFunction(const string& function);
 
-	int Priority(const string& op); //приоритет операций	
+	int Priority(const string& op); //приоритет операций
 
-	using FunctionType = double(*)(double);
+	void PushUnOperationResult(const string&);
 
-	FunctionType GetFunction(const string&);
+	void PushBinOperationResult(const string&);
+
 };

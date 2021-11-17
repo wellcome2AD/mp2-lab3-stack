@@ -20,7 +20,7 @@ bool TCalculator::CheckBracketsNum()
 			if (expr[i] == ')')
 				st1.Pop();
 		}
-		catch (const std::exception&)
+		catch (const TException&)
 		{
 			cout << "')' more than '(' " << '\n';
 			return 0;
@@ -32,7 +32,7 @@ bool TCalculator::CheckBracketsNum()
 		cout << "'(' more than ')' " << '\n';
 		return 0;
 	}
-	cout << "The expression is correct" << '\n';
+	cout << "Bracket sequence is correct" << '\n';
 	return 1;
 }
 
@@ -72,14 +72,49 @@ int TCalculator::Priority(const string& op)
 		return 3;
 }
 
-TCalculator::FunctionType TCalculator::GetFunction(const string& f)
+void TCalculator::PushUnOperationResult(const string& op)
 {
-	if (f == "sin")
-		return sin;
-	if (f == "cos")
-		return cos;
-	if (f == "tg")
-		return tan;
+	double a = st_double.Pop();
+
+	if (op == "sin")
+	{
+		st_double.Push(sin(a));
+	}
+	else if (op == "cos")
+	{
+		st_double.Push(cos(a));
+	}
+	else if (op == "tg")
+	{
+		st_double.Push(tan(a));
+	}
+}
+
+void TCalculator::PushBinOperationResult(const string& op)
+{
+	double b = st_double.Pop();
+	double a = st_double.Pop();
+
+	if (op == "+")
+	{
+		st_double.Push(a + b);
+	}
+	else if (op == "-")
+	{
+		st_double.Push(a - b);
+	}
+	else if (op == "*")
+	{
+		st_double.Push(a * b);
+	}
+	else if (op == "/")
+	{
+		st_double.Push(a / b);
+	}
+	else if (op == "^")
+	{
+		st_double.Push(pow(a, b));
+	}
 }
 
 void TCalculator::ToPostfix()
@@ -160,7 +195,7 @@ void TCalculator::ToPostfix()
 
 double TCalculator::CalcPostfix()
 {
-	double a, b;
+	double a;
 	
 	for (int i = 0; i < postfix.size(); i++)
 	{
@@ -175,38 +210,20 @@ double TCalculator::CalcPostfix()
 
 		if (isOperator(postfix[i]))
 		{
-			b = st_double.Pop();
-			a = st_double.Pop();
-
-			switch (postfix[i])
-			{
-			case '+':
-				st_double.Push(a + b);
-				break;
-			case '-':
-				st_double.Push(a - b);
-				break;
-			case '*':
-				st_double.Push(a * b);
-				break;
-			case '/':
-				st_double.Push(a / b);
-				break;
-			}
+			PushBinOperationResult(string(1, postfix[i]));
+			continue;
 		}
 
 		if (postfix[i] != ' ')
 		{
 			string function;
-			a = st_double.Pop();
 			
 			while (postfix[i] != ' ')
 				function += postfix[i++];
 			
 			if (isFunction(function))
 			{
-				double res = GetFunction(function)(a);
-				st_double.Push(res);
+				PushUnOperationResult(function);
 			}
 		}
 	}
@@ -214,104 +231,90 @@ double TCalculator::CalcPostfix()
 	postfix = "";
 	return st_double.Pop();
 }
-//
-//double TCalculator::Calc()
-//{
-//	string infix = "(" + expr + ")";
-//
-//	st_double.Clear();
-//	st_char.Clear();
-//
-//	for (int i = 0; i < infix.length(); i++)
-//	{
-//		if (infix[i] >= '0' && infix[i] <= '9')
-//		{
-//			size_t ind;
-//			double num = stod(&infix[i], &ind);
-//			st_double.Push(num);
-//			i += ind - 1;
-//			continue;
-//		}
-//
-//		if (infix[i] == '(')
-//		{
-//			st_char.Push('(');
-//			continue;
-//		}
-//
-//		if (infix[i] == ')')
-//		{
-//			while (st_char.Top() != '(')
-//			{
-//				double b = st_double.Pop();
-//				double a = st_double.Pop();
-//
-//				switch (st_char.Pop())
-//				{
-//				case '+':
-//					st_double.Push(a + b);
-//					break;
-//				case '-':
-//					st_double.Push(a - b);
-//					break;
-//				case '*':
-//					st_double.Push(a * b);
-//					break;
-//				case '/':
-//					st_double.Push(a / b);
-//					break;
-//				}
-//			}
-//			st_char.Pop();
-//			continue;
-//		}
-//
-//		if (isOperator(infix[i]))
-//		{
-//			while (Priority(st_char.Top()) > Priority(infix[i]))
-//			{
-//				double b = st_double.Pop();
-//				double a = st_double.Pop();
-//
-//				switch (st_char.Pop())
-//				{
-//				case '+':
-//					st_double.Push(a + b);
-//					break;
-//				case '-':
-//					st_double.Push(a - b);
-//					break;
-//				case '*':
-//					st_double.Push(a * b);
-//					break;
-//				case '/':
-//					st_double.Push(a / b);
-//					break;
-//				}
-//			}
-//			
-//			st_char.Push(infix[i]);
-//		}
-//	}
-//	
-//	double top = st_double.Pop();
-//
-//	if (st_double.IsEmpty())
-//		return top;
-//	else 
-//		throw TException("The expression is incorrect");
-//}
 
-//приоритет: ( = 0, + = - = 1, *, ^
-	//1. брать очередную операцию (а), сравнивать её по приоритету
-	//с той, которая сейчас на вершине стека (b):
-	//	1.1 если (a <= b) - вытолкнуть b в строку
-	//	1.2 если a>b - записать a в стек
-	//	1.3 '(' просто записывается в стек, без проверки
-	//	1.4 ) выталкивает все операции из стека до (
-	//  (в связи с этим все выражения будут заключаться в () )
-	//2. число просто переписывается в строку
-	//+ ( + * ( - ) ) * ^ -
-	//2 + (1+2*(4 - 2))*4^2 - 5
-	//2 1 2 4 2 - * + 4 2 ^ +
-	//
+double TCalculator::Calc()
+{
+	double a;
+	string infix = "(" + expr + ")";
+
+	st_double.Clear();
+	st_string.Clear();
+
+	for (int i = 0; i < infix.length(); i++)
+	{
+		if (infix[i] >= '0' && infix[i] <= '9')
+		{
+			size_t ind;
+			double num = stod(&infix[i], &ind);
+			st_double.Push(num);
+			i += ind - 1;
+			continue;
+		}
+
+		if (infix[i] == '(')
+		{
+			st_string.Push("(");
+			continue;
+		}
+
+		if (infix[i] == ')')
+		{
+			while (st_string.Top() != "(")
+			{
+				string op = st_string.Pop();
+				PushBinOperationResult(op);
+			}
+
+			st_string.Pop();
+
+			if (!st_string.IsEmpty() && isFunction(st_string.Top()))
+				PushUnOperationResult(st_string.Pop());
+
+			continue;
+		}
+
+		if (isOperator(infix[i]))
+		{
+			while (Priority(st_string.Top()) > Priority(string(1, infix[i])))
+			{
+				string op = st_string.Pop();
+				PushBinOperationResult(op);
+			}
+			
+			st_string.Push(string(1, infix[i]));
+			continue;
+		}
+
+		if (infix[i] != ' ')
+		{
+			string function;
+
+			while (infix[i] != '(')
+			{
+				function += infix[i];
+				i++;
+			}
+
+			while (!function.empty() && isspace(function[function.size() - 1]))
+			{
+				function.erase(function.size() - 1);
+			}
+
+			if (isFunction(function))
+			{
+				st_string.Push(function);
+				st_string.Push("(");
+				continue;
+			}
+			else
+				throw TException("Unknown function");
+		}
+	}
+	
+	double top = st_double.Pop();
+
+	if (st_double.IsEmpty())
+		return top;
+	else 
+		throw TException("The expression is incorrect");
+}

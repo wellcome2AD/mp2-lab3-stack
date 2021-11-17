@@ -30,18 +30,18 @@ int main()
 				return 0;
 			}
 
-			try
-			{			
+			//try
+			//{			
 				res = calc.CalcPostfix();
 				cout << "Result of calculation with postfix: " << res << '\n';
-			}
-			catch (const TException&)
-			{
-				cout << "Cannot calculate postfix expression" << '\n';
-				return 0;
-			}
+			//}
+			//catch (const TException&)
+			//{
+			//	cout << "Cannot calculate postfix expression" << '\n';
+			//	return 0;
+			//}
 			
-			/*try
+			try
 			{
 				res = calc.Calc();
 				cout << "Result of calculation without postfix: " << res << '\n';
@@ -50,7 +50,7 @@ int main()
 			{
 				cout << "Cannot calculate" << '\n';
 				return 0;
-			}*/
+			}
 		}
 		else
 			break;
