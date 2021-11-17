@@ -2,25 +2,62 @@
 #include <string>
 #include "TCalculator.h"
 #include "TStack.h"
+#include "TException.h"
 
 using namespace std;
 
 int main()
 {
+	double res;
+	string expr;
 	TCalculator calc;
-
-	calc.SetExpr("2 + 3");
 	
-	if (calc.CheckExpression())
+	while (true)
 	{
-		calc.ToPostfix();
-		cout << calc.GetPostfix() << '\n';
-		cout << calc.CalcPostfix() << '\n';
+		std::getline(std::cin, expr);
+		calc.SetExpr(expr);
 
-		double res = calc.Calc();
+		if (expr != "0" && calc.CheckBracketsNum())
+		{
+			try
+			{
+				calc.ToPostfix();
+				cout << "Postfix: " << calc.GetPostfix() << '\n';
+			}
+			catch (const TException&)
+			{
+				cout << "Cannot convert to postfix" << '\n';
+				return 0;
+			}
 
-		cout << res << '\n';
+			try
+			{			
+				res = calc.CalcPostfix();
+				cout << "Result of calculation with postfix: " << res << '\n';
+			}
+			catch (const TException&)
+			{
+				cout << "Cannot calculate postfix expression" << '\n';
+				return 0;
+			}
+			
+			/*try
+			{
+				res = calc.Calc();
+				cout << "Result of calculation without postfix: " << res << '\n';
+			}
+			catch (const TException&)
+			{
+				cout << "Cannot calculate" << '\n';
+				return 0;
+			}*/
+		}
+		else
+			break;
+
+		cout << '\n';
 	}
+	
 	//(1 + sin(2))
 	//sin(
 	// + sin(2)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TException.h"
+
 template <class T>
 
 class TStack
@@ -39,21 +41,21 @@ public:
 	void Push(const T& element)
 	{
 		if (IsFull())
-			throw "Stack is full";
+			throw TException("Stack is full");
 		Stack[++NumLast] = element;
 	}
 
 	T Pop()
 	{
 		if (IsEmpty())
-			throw "Stack is empty";
+			throw TException("Stack is empty");
 		return Stack[NumLast--];
 	}
 
 	T Top()
 	{
 		if (IsEmpty())
-			throw "Stack is empty";
+			throw TException("Stack is empty");
 		return Stack[NumLast];
 	}
 };

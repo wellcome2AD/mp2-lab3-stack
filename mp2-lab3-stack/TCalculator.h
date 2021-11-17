@@ -10,7 +10,7 @@ class TCalculator
 {
 	string expr;
 	string postfix;
-	TStack<char> st_char;
+	TStack<string> st_string;
 	TStack<double> st_double;
 
 public:
@@ -20,7 +20,7 @@ public:
 	
 	string GetPostfix() { return postfix; }
 
-	bool CheckExpression(); //проверка корректности
+	bool CheckBracketsNum(); //проверка корректности
 	
 	void ToPostfix();
 	
@@ -32,5 +32,11 @@ private:
 	
 	bool isOperator(char symbol);
 
-	int Priority(char op); //приоритет операций	
+	bool isFunction(const string& function);
+
+	int Priority(const string& op); //приоритет операций	
+
+	using FunctionType = double(*)(double);
+
+	FunctionType GetFunction(const string&);
 };
