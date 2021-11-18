@@ -30,23 +30,23 @@ int main()
 				return 0;
 			}
 
-			//try
-			//{			
+			try
+			{			
 				res = calc.CalcPostfix();
 				cout << "Result of calculation with postfix: " << res << '\n';
-			//}
-			//catch (const TException&)
-			//{
-			//	cout << "Cannot calculate postfix expression" << '\n';
-			//	return 0;
-			//}
+			}
+			catch (const TException&)
+			{
+				cout << "Cannot calculate postfix expression" << '\n';
+				return 0;
+			}
 			
 			try
 			{
 				res = calc.Calc();
 				cout << "Result of calculation without postfix: " << res << '\n';
 			}
-			catch (const TException&)
+			catch (const TException& ex)
 			{
 				cout << "Cannot calculate" << '\n';
 				return 0;
@@ -57,20 +57,4 @@ int main()
 
 		cout << '\n';
 	}
-	
-	//(1 + sin(2))
-	//sin(
-	// + sin(2)
-	// ( 1
-	//
-
-
-	/*string tmp = "2 + 3.4 * (2-1)";
-	int i = 4;
-	size_t ind;
-	double d = stod(&tmp[i], &ind);
-
-	cout << "str = " << tmp << endl;
-	cout << "d = " << d << endl;
-	cout << "ind = " << ind << endl;*/
 }

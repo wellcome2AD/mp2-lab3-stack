@@ -160,7 +160,7 @@ void TCalculator::ToPostfix()
 
 		if (isOperator(infix[i]))
 		{
-			while (Priority(st_string.Top()) > Priority(string(1, infix[i])))
+			while (Priority(st_string.Top()) >= Priority(string(1, infix[i])))
 			{
 				postfix += st_string.Pop();
 				postfix += " ";
@@ -275,7 +275,7 @@ double TCalculator::Calc()
 
 		if (isOperator(infix[i]))
 		{
-			while (Priority(st_string.Top()) > Priority(string(1, infix[i])))
+			while (Priority(st_string.Top()) >= Priority(string(1, infix[i])))
 			{
 				string op = st_string.Pop();
 				PushBinOperationResult(op);
