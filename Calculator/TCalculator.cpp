@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
-#include "TCalculator.h"
-#include "TException.h"
+#include "..\mp2-lab3-stack\TCalculator.h"
+#include "..\mp2-lab3-stack\TException.h"
 
 using namespace std;
 
@@ -195,7 +195,6 @@ void TCalculator::ToPostfix()
 
 double TCalculator::CalcPostfix()
 {
-	double a;
 	
 	for (int i = 0; i < postfix.size(); i++)
 	{
@@ -229,12 +228,17 @@ double TCalculator::CalcPostfix()
 	}
 	
 	postfix = "";
-	return st_double.Pop();
+
+	double top = st_double.Pop();
+
+	if (st_double.IsEmpty())
+		return top;
+	else
+		throw TException("The expression is incorrect");
 }
 
 double TCalculator::Calc()
 {
-	double a;
 	string infix = "(" + expr + ")";
 
 	st_double.Clear();

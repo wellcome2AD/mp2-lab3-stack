@@ -24,7 +24,7 @@ int main()
 				calc.ToPostfix();
 				cout << "Postfix: " << calc.GetPostfix() << '\n';
 			}
-			catch (const TException&)
+			catch (...)
 			{
 				cout << "Cannot convert to postfix" << '\n';
 				return 0;

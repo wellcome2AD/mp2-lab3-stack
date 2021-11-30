@@ -20,8 +20,8 @@ public:
 	
 	string GetPostfix() { return postfix; }
 
-	bool CheckBracketsNum(); //проверка корректности
-	
+	bool CheckBracketsNum(); 
+
 	void ToPostfix();
 	
 	double CalcPostfix();
@@ -39,5 +39,4 @@ private:
 	void PushUnOperationResult(const string&);
 
 	void PushBinOperationResult(const string&);
-
 };
